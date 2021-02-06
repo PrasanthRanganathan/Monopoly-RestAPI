@@ -57,10 +57,15 @@ public class MonopolyController {
 		String bal = service.rentPaid(dies);
 		if (bal.startsWith("Game")) {
 			return bal;
-		} else if (dies.getPlayer() == 123 && !(bal.equals("Invalide Input"))) {
+		} else if (bal.contains("won") && dies.getPlayer() == 123) {
+			return "Player1 Remaining balance 0 "+bal;
+		}else if (bal.contains("won") && dies.getPlayer() == 321) {
+			return "Player2 Remaining balance 0 "+bal;
+		}
+		else if (dies.getPlayer() == 321 && !(bal.equals("Invalide Input"))) {
 			return "Player2 paid rent: " + dies.getAmount() + " to stay " + dies.getPlace()
 					+ " Player1 Remaining Balance " + bal;
-		} else if (dies.getPlayer() == 321 && !(bal.equals("Invalide Input"))) {
+		} else if (dies.getPlayer() == 123 && !(bal.equals("Invalide Input"))) {
 			return "Player1 paid rent: " + dies.getAmount() + " to stay " + dies.getPlace()
 					+ " Player2 Remaining Balance " + bal;
 		}

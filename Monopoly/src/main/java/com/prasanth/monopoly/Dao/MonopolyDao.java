@@ -42,7 +42,7 @@ public class MonopolyDao {
 		Session session = entityManager.unwrap(Session.class);
 		List<Dies> d =  session.createQuery("from Dies", Dies.class).getResultList();
 
-		if (!(d.get(0).getId() > 49)) {
+		if (!(d.get(d.size()-1).getId() > 49)) {
 
 			if (dies.getPlayer() == 123) {
 				Player1 p1 = session.get(Player1.class, dies.getPlayer());
@@ -90,7 +90,7 @@ public class MonopolyDao {
 		Session session = entityManager.unwrap(Session.class);
 		List<Dies> d = session.createQuery("from Dies", Dies.class).getResultList();
 
-		if (!(d.get(0).getId() > 49)) {
+		if (!(d.get(d.size()-1).getId() > 49)) {
 		
 		if (dies.getPlayer() == 123) {
 			Player1 p1 = session.get(Player1.class, dies.getPlayer());
@@ -138,8 +138,8 @@ public class MonopolyDao {
 
 		Session session = entityManager.unwrap(Session.class);
 		List<Dies> d = session.createQuery("from Dies", Dies.class).getResultList();
-
-		if (!(d.get(0).getId() > 49)) {
+		
+		if (!(d.get(d.size()-1).getId() > 49)) {
 		
 		if (dies.getPlayer() == 123) {
 			Player1 p1 = session.get(Player1.class, dies.getPlayer());
@@ -149,17 +149,17 @@ public class MonopolyDao {
 			int b2 = p2.getBalance();
 			
 			if (b1 >= 0) {
-				int updatedBal1 = b1 + dies.getAmount();
-				int updatedBal2 = b2-dies.getAmount();
+				int updatedBal1 = b1 - dies.getAmount();
+				int updatedBal2 = b2 + dies.getAmount();
 				p1.setBalance(updatedBal1);
 				session.createQuery("update Player1 set balance=:newbal where id=123")
 						.setParameter("newbal", updatedBal1).executeUpdate();
 				session.createQuery("update Player2 set balance=:newbal where id=321")
 				.setParameter("newbal", updatedBal2).executeUpdate();
 				session.save(dies);
-				return Integer.toString(updatedBal1);
+				return Integer.toString(updatedBal2);
 			} else {
-				return "0 Player2 won the Game";
+				return "Player2 won the Game";
 			}
 		} else if (dies.getPlayer() == 321) {
 			Player2 p2 = session.get(Player2.class, dies.getPlayer());
@@ -169,24 +169,24 @@ public class MonopolyDao {
 			int b1 = p1.getBalance();
 			
 			if (b2 >= 0) {
-				int updatedBal2 = b2 + dies.getAmount();
-				int updatedBal1 = b1 - dies.getAmount();
+				int updatedBal2 = b2 - dies.getAmount();
+				int updatedBal1 = b1 + dies.getAmount();
 				p2.setBalance(updatedBal2);
 				session.createQuery("update Player2 set balance=:newbal where id=321")
 						.setParameter("newbal", updatedBal2).executeUpdate();
 				session.createQuery("update Player1 set balance=:newbal where id=123")
 				.setParameter("newbal", updatedBal1).executeUpdate();
 				session.save(dies);
-				return Integer.toString(updatedBal2);
+				return Integer.toString(updatedBal1);
 
 			} else {
-				return "0 Player1 won the Game";
+				return "Player1 won the Game";
 			}
 		}
 		return "Invalide Input";
 	}else {
 		Player1 p1 = session.get(Player1.class, 123);
-		Player2 p2 = session.get(Player2.class, 123);
+		Player2 p2 = session.get(Player2.class, 321);
 		if (p1.getBalance()>p2.getBalance()) {
 			return "Game Over 50 turns exceed Player1 won the Game";
 		}else {
